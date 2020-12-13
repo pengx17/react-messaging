@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es2019", "dom", "dom.iterable"],
+    "suppressImplicitAnyIndexErrors": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "target": "es2019",
+    "resolveJsonModule": true,
+    "outDir": "./dist",
+    "module": "ES2015",
+    "strict": true,
+    "noImplicitAny": true,
+    "declaration": true,
+    "jsx": "react-jsx",
+    "removeComments": false
+  }
+}

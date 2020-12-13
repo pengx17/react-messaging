@@ -1,0 +1,26 @@
+{
+  "name": "react-messaging",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/pengx17/react-messaging.git",
+  "author": "pengx17 <pengxiao@outlook.com>",
+  "license": "MIT",
+  "scripts": {
+    "prettier": "prettier \"**/*.{md,json,css,js,jsx,ts,tsx}\" --write"
+  },
+  "devDependencies": {
+    "husky": "^4.3.5",
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{json,md,css,js,jsx,ts,tsx}": [
+      "prettier --write"
+    ]
+  }
+}

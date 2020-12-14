@@ -22,3 +22,12 @@ export type InferMessageFromType<
     ? TMessage<AllTypes>
     : never
   : never;
+
+export type InferMessageType<M extends TMessage> = M extends TMessage<
+  infer MT,
+  any
+>
+  ? MT
+  : M extends TMessage<infer MT>
+  ? MT
+  : never;

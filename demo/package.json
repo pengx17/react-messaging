@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "pika-web",
     "start": "yarn start:parent && start:child",
-    "start:parent": "live-server --port=3300 parent --mount=/web_modules:./web_modules --mount=/dist:./dist",
+    "start:parent": "live-server --port=3300 parent --mount=/dist:./dist --mount=/@peng:./dist",
     "start:child": "live-server --port 3301"
   },
   "@pika/web": {

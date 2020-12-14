@@ -1,0 +1,10 @@
+{
+  "version": "0.0.0",
+  "name": "@pengx17/react-messaging",
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}

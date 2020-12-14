@@ -2,6 +2,9 @@
 
 # dependencies
 node_modules
+web_modules
+
+dist
 
 # misc
 .DS_Store

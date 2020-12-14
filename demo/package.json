@@ -1,0 +1,24 @@
+{
+  "version": "0.0.0",
+  "private": true,
+  "name": "demo",
+  "scripts": {
+    "prepare": "pika-web",
+    "start": "yarn start:parent && start:child",
+    "start:parent": "live-server --port=3300 parent --mount=/web_modules:./web_modules --mount=/dist:./dist",
+    "start:child": "live-server --port 3301"
+  },
+  "@pika/web": {
+    "webDependencies": [
+      "react-dom",
+      "react"
+    ]
+  },
+  "dependencies": {
+    "@pika/web": "^0.6.1",
+    "live-server": "^1.2.1",
+    "react": "npm:@pika/react",
+    "react-dom": "npm:@pika/react-dom",
+    "@pengx17/react-messaging": "*"
+  }
+}

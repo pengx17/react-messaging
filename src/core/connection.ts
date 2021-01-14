@@ -3,28 +3,35 @@ import { InferMessageFromType, InferMessageType, TMessage } from './types';
 const PARENT_READY = '__$$PARENT_READY$$__';
 const CHILD_READY = '__$$CHILD_READY$$__';
 
+function messageToString(message: TMessage) {
+  if (!(message as any).payload) {
+    return `[${message.type}]`;
+  } else {
+    return `[${message.type}, {${(message as any).payload}}]`;
+  }
+}
+
 export class Connection<
   OutboundMessage extends TMessage = TMessage<string, any>,
   InboundMessage extends TMessage = TMessage<string, any>
 > {
-  private ready$: Promise<void>;
+  private ready$: Promise<void> | null = null;
   private readyResRej!: {
     resolver: () => void;
     rejector: (err: any) => void;
   };
-  constructor(private role: 'PARENT' | 'CHILD', private peer: Window) {
+  constructor(private role: 'PARENT' | 'CHILD', private peer: Window) {}
+
+  async handshake(signal?: AbortSignal) {
+    if (this.ready$) {
+      return this.ready$;
+    }
     this.ready$ = new Promise((res, rej) => {
       this.readyResRej = {
         resolver: res,
         rejector: rej,
       };
     });
-  }
-
-  async handshake(signal?: AbortSignal) {
-    if (this.ready$) {
-      return this.ready$;
-    }
     try {
       if (this.role === 'PARENT') {
         await this.ask(
@@ -34,7 +41,9 @@ export class Connection<
         );
       } else {
         await this.wait(PARENT_READY as any, signal);
-        this.send(CHILD_READY as any);
+        this.send({
+          type: CHILD_READY,
+        } as any);
       }
       this.readyResRej.resolver();
     } catch (err) {
@@ -49,6 +58,7 @@ export class Connection<
   send<OM extends OutboundMessage>(message: OM) {
     // TODO: fix '*' here
     this.peer.postMessage(JSON.stringify(message), '*');
+    console.info(`${this.role}: Message sent |> ${messageToString(message)}`);
   }
 
   subscribe<IM extends InferMessageType<InboundMessage>>(
@@ -61,15 +71,20 @@ export class Connection<
     const h = (e: MessageEvent) => {
       if (e.source === this.peer) {
         try {
-          const message = JSON.parse(e.data);
+          const message =
+            typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
           const mts = Array.isArray(messageTypeOrTypes)
             ? messageTypeOrTypes
             : [messageTypeOrTypes];
-          if (mts.includes(message.type)) {
+          if (mts.includes(message?.type)) {
             handler(null, message);
+            console.info(
+              `${this.role}: Message recv <| ${messageToString(message)}]`
+            );
           }
         } catch (err) {
           handler(err);
+          console.error(`${this.role}: Message recv failed`, err);
         }
       }
     };
@@ -111,7 +126,7 @@ export class Connection<
         unsub = this.subscribe(messageTypeOrTypes, (err, p) => {
           if (err) {
             rej(err);
-          } else {
+          } else if (p) {
             res(p);
           }
           doUnsub();

@@ -15,6 +15,7 @@ export interface IFrameProps<
 export function IFrame({
   onConnected,
   onConnectionError,
+  style,
   ...rest
 }: IFrameProps) {
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
@@ -45,6 +46,11 @@ export function IFrame({
 
   return (
     <iframe
+      style={{
+        border: 'none',
+        background: '#fff',
+        ...style,
+      }}
       {...rest}
       ref={iframeRef}
       onLoad={() => {
